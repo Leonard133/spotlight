@@ -2,7 +2,6 @@
 
 namespace LivewireUI\Spotlight;
 
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -79,29 +78,29 @@ class Spotlight extends Component
         }
     }
 
-    public function render(): View | Factory
+    public function render()
     {
         return view('livewire-ui-spotlight::spotlight', [
-            'commands' => collect(self::$commands)
-                ->filter(function (SpotlightCommand $command) {
-                    if (! method_exists($command, 'shouldBeShown')) {
-                        return true;
-                    }
+          'commands' => collect(self::$commands)
+              ->filter(function (SpotlightCommand $command) {
+                  if (! method_exists($command, 'shouldBeShown')) {
+                      return true;
+                  }
 
-                    /**
-                     * @psalm-suppress InvalidArgument
-                     */
-                    return app()->call([$command, 'shouldBeShown']);
-                })
-                ->values()
-                ->map(function (SpotlightCommand $command) {
-                    return [
-                        'id' => $command->getId(),
-                        'name' => $command->getName(),
-                        'description' => $command->getDescription(),
-                        'dependencies' => $command->dependencies()?->toArray() ?? [],
-                    ];
-                }),
+                  /**
+                   * @psalm-suppress InvalidArgument
+                   */
+                  return app()->call([$command, 'shouldBeShown']);
+              })
+              ->values()
+              ->map(function (SpotlightCommand $command) {
+                  return [
+                      'id' => $command->getId(),
+                      'name' => $command->getName(),
+                      'description' => $command->getDescription(),
+                      'dependencies' => $command->dependencies()?->toArray() ?? [],
+                  ];
+              }),
         ]);
     }
 }
